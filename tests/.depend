@@ -1,0 +1,108 @@
+button.o: ./button.c ..//gtk.h ..//gdk.h ..//gdktypes.h ../glib/glib.h \
+  ../glib/gconfig.h ..//config.h ..//gtktypes.h ..//gtkaccelerator.h \
+  ..//gtkalignment.h ..//gtkbox.h ..//gtkbutton.h ..//gtkcallback.h \
+  ..//gtkcontainer.h ..//gtkdata.h ..//gtkdraw.h ..//gtkdrawingarea.h \
+  ..//gtkentry.h ..//gtkfilesel.h ..//gtkframe.h ..//gtkgc.h ..//gtklist.h \
+  ..//gtklistbox.h ..//gtkmain.h ..//gtkmenu.h ..//gtkmisc.h ..//gtkobserver.h \
+  ..//gtkoptionmenu.h ..//gtkruler.h ..//gtkscale.h ..//gtkscroll.h \
+  ..//gtkscrollbar.h ..//gtkstyle.h ..//gtktable.h ..//gtkwidget.h \
+  ..//gtkwindow.h
+entry.o: ./entry.c ..//gtk.h ..//gdk.h ..//gdktypes.h ../glib/glib.h \
+  ../glib/gconfig.h ..//config.h ..//gtktypes.h ..//gtkaccelerator.h \
+  ..//gtkalignment.h ..//gtkbox.h ..//gtkbutton.h ..//gtkcallback.h \
+  ..//gtkcontainer.h ..//gtkdata.h ..//gtkdraw.h ..//gtkdrawingarea.h \
+  ..//gtkentry.h ..//gtkfilesel.h ..//gtkframe.h ..//gtkgc.h ..//gtklist.h \
+  ..//gtklistbox.h ..//gtkmain.h ..//gtkmenu.h ..//gtkmisc.h ..//gtkobserver.h \
+  ..//gtkoptionmenu.h ..//gtkruler.h ..//gtkscale.h ..//gtkscroll.h \
+  ..//gtkscrollbar.h ..//gtkstyle.h ..//gtktable.h ..//gtkwidget.h \
+  ..//gtkwindow.h
+gamma_correct.o: ./gamma_correct.c ..//gtk.h ..//gdk.h ..//gdktypes.h \
+  ../glib/glib.h ../glib/gconfig.h ..//config.h ..//gtktypes.h \
+  ..//gtkaccelerator.h ..//gtkalignment.h ..//gtkbox.h ..//gtkbutton.h \
+  ..//gtkcallback.h ..//gtkcontainer.h ..//gtkdata.h ..//gtkdraw.h \
+  ..//gtkdrawingarea.h ..//gtkentry.h ..//gtkfilesel.h ..//gtkframe.h \
+  ..//gtkgc.h ..//gtklist.h ..//gtklistbox.h ..//gtkmain.h ..//gtkmenu.h \
+  ..//gtkmisc.h ..//gtkobserver.h ..//gtkoptionmenu.h ..//gtkruler.h \
+  ..//gtkscale.h ..//gtkscroll.h ..//gtkscrollbar.h ..//gtkstyle.h \
+  ..//gtktable.h ..//gtkwidget.h ..//gtkwindow.h
+listbox.o: ./listbox.c ..//gtk.h ..//gdk.h ..//gdktypes.h ../glib/glib.h \
+  ../glib/gconfig.h ..//config.h ..//gtktypes.h ..//gtkaccelerator.h \
+  ..//gtkalignment.h ..//gtkbox.h ..//gtkbutton.h ..//gtkcallback.h \
+  ..//gtkcontainer.h ..//gtkdata.h ..//gtkdraw.h ..//gtkdrawingarea.h \
+  ..//gtkentry.h ..//gtkfilesel.h ..//gtkframe.h ..//gtkgc.h ..//gtklist.h \
+  ..//gtklistbox.h ..//gtkmain.h ..//gtkmenu.h ..//gtkmisc.h ..//gtkobserver.h \
+  ..//gtkoptionmenu.h ..//gtkruler.h ..//gtkscale.h ..//gtkscroll.h \
+  ..//gtkscrollbar.h ..//gtkstyle.h ..//gtktable.h ..//gtkwidget.h \
+  ..//gtkwindow.h
+filesel.o: ./filesel.c ..//gtk.h ..//gdk.h ..//gdktypes.h ../glib/glib.h \
+  ../glib/gconfig.h ..//config.h ..//gtktypes.h ..//gtkaccelerator.h \
+  ..//gtkalignment.h ..//gtkbox.h ..//gtkbutton.h ..//gtkcallback.h \
+  ..//gtkcontainer.h ..//gtkdata.h ..//gtkdraw.h ..//gtkdrawingarea.h \
+  ..//gtkentry.h ..//gtkfilesel.h ..//gtkframe.h ..//gtkgc.h ..//gtklist.h \
+  ..//gtklistbox.h ..//gtkmain.h ..//gtkmenu.h ..//gtkmisc.h ..//gtkobserver.h \
+  ..//gtkoptionmenu.h ..//gtkruler.h ..//gtkscale.h ..//gtkscroll.h \
+  ..//gtkscrollbar.h ..//gtkstyle.h ..//gtktable.h ..//gtkwidget.h \
+  ..//gtkwindow.h
+optionmenu.o: ./optionmenu.c ..//gtk.h ..//gdk.h ..//gdktypes.h ../glib/glib.h \
+  ../glib/gconfig.h ..//config.h ..//gtktypes.h ..//gtkaccelerator.h \
+  ..//gtkalignment.h ..//gtkbox.h ..//gtkbutton.h ..//gtkcallback.h \
+  ..//gtkcontainer.h ..//gtkdata.h ..//gtkdraw.h ..//gtkdrawingarea.h \
+  ..//gtkentry.h ..//gtkfilesel.h ..//gtkframe.h ..//gtkgc.h ..//gtklist.h \
+  ..//gtklistbox.h ..//gtkmain.h ..//gtkmenu.h ..//gtkmisc.h ..//gtkobserver.h \
+  ..//gtkoptionmenu.h ..//gtkruler.h ..//gtkscale.h ..//gtkscroll.h \
+  ..//gtkscrollbar.h ..//gtkstyle.h ..//gtktable.h ..//gtkwidget.h \
+  ..//gtkwindow.h
+ruler.o: ./ruler.c ..//gtk.h ..//gdk.h ..//gdktypes.h ../glib/glib.h \
+  ../glib/gconfig.h ..//config.h ..//gtktypes.h ..//gtkaccelerator.h \
+  ..//gtkalignment.h ..//gtkbox.h ..//gtkbutton.h ..//gtkcallback.h \
+  ..//gtkcontainer.h ..//gtkdata.h ..//gtkdraw.h ..//gtkdrawingarea.h \
+  ..//gtkentry.h ..//gtkfilesel.h ..//gtkframe.h ..//gtkgc.h ..//gtklist.h \
+  ..//gtklistbox.h ..//gtkmain.h ..//gtkmenu.h ..//gtkmisc.h ..//gtkobserver.h \
+  ..//gtkoptionmenu.h ..//gtkruler.h ..//gtkscale.h ..//gtkscroll.h \
+  ..//gtkscrollbar.h ..//gtkstyle.h ..//gtktable.h ..//gtkwidget.h \
+  ..//gtkwindow.h
+scale.o: ./scale.c ..//gtk.h ..//gdk.h ..//gdktypes.h ../glib/glib.h \
+  ../glib/gconfig.h ..//config.h ..//gtktypes.h ..//gtkaccelerator.h \
+  ..//gtkalignment.h ..//gtkbox.h ..//gtkbutton.h ..//gtkcallback.h \
+  ..//gtkcontainer.h ..//gtkdata.h ..//gtkdraw.h ..//gtkdrawingarea.h \
+  ..//gtkentry.h ..//gtkfilesel.h ..//gtkframe.h ..//gtkgc.h ..//gtklist.h \
+  ..//gtklistbox.h ..//gtkmain.h ..//gtkmenu.h ..//gtkmisc.h ..//gtkobserver.h \
+  ..//gtkoptionmenu.h ..//gtkruler.h ..//gtkscale.h ..//gtkscroll.h \
+  ..//gtkscrollbar.h ..//gtkstyle.h ..//gtktable.h ..//gtkwidget.h \
+  ..//gtkwindow.h
+scroll.o: ./scroll.c ..//gtk.h ..//gdk.h ..//gdktypes.h ../glib/glib.h \
+  ../glib/gconfig.h ..//config.h ..//gtktypes.h ..//gtkaccelerator.h \
+  ..//gtkalignment.h ..//gtkbox.h ..//gtkbutton.h ..//gtkcallback.h \
+  ..//gtkcontainer.h ..//gtkdata.h ..//gtkdraw.h ..//gtkdrawingarea.h \
+  ..//gtkentry.h ..//gtkfilesel.h ..//gtkframe.h ..//gtkgc.h ..//gtklist.h \
+  ..//gtklistbox.h ..//gtkmain.h ..//gtkmenu.h ..//gtkmisc.h ..//gtkobserver.h \
+  ..//gtkoptionmenu.h ..//gtkruler.h ..//gtkscale.h ..//gtkscroll.h \
+  ..//gtkscrollbar.h ..//gtkstyle.h ..//gtktable.h ..//gtkwidget.h \
+  ..//gtkwindow.h
+scrollbar.o: ./scrollbar.c ..//gtk.h ..//gdk.h ..//gdktypes.h ../glib/glib.h \
+  ../glib/gconfig.h ..//config.h ..//gtktypes.h ..//gtkaccelerator.h \
+  ..//gtkalignment.h ..//gtkbox.h ..//gtkbutton.h ..//gtkcallback.h \
+  ..//gtkcontainer.h ..//gtkdata.h ..//gtkdraw.h ..//gtkdrawingarea.h \
+  ..//gtkentry.h ..//gtkfilesel.h ..//gtkframe.h ..//gtkgc.h ..//gtklist.h \
+  ..//gtklistbox.h ..//gtkmain.h ..//gtkmenu.h ..//gtkmisc.h ..//gtkobserver.h \
+  ..//gtkoptionmenu.h ..//gtkruler.h ..//gtkscale.h ..//gtkscroll.h \
+  ..//gtkscrollbar.h ..//gtkstyle.h ..//gtktable.h ..//gtkwidget.h \
+  ..//gtkwindow.h
+table.o: ./table.c ..//gtk.h ..//gdk.h ..//gdktypes.h ../glib/glib.h \
+  ../glib/gconfig.h ..//config.h ..//gtktypes.h ..//gtkaccelerator.h \
+  ..//gtkalignment.h ..//gtkbox.h ..//gtkbutton.h ..//gtkcallback.h \
+  ..//gtkcontainer.h ..//gtkdata.h ..//gtkdraw.h ..//gtkdrawingarea.h \
+  ..//gtkentry.h ..//gtkfilesel.h ..//gtkframe.h ..//gtkgc.h ..//gtklist.h \
+  ..//gtklistbox.h ..//gtkmain.h ..//gtkmenu.h ..//gtkmisc.h ..//gtkobserver.h \
+  ..//gtkoptionmenu.h ..//gtkruler.h ..//gtkscale.h ..//gtkscroll.h \
+  ..//gtkscrollbar.h ..//gtkstyle.h ..//gtktable.h ..//gtkwidget.h \
+  ..//gtkwindow.h
+toggle.o: ./toggle.c ..//gtk.h ..//gdk.h ..//gdktypes.h ../glib/glib.h \
+  ../glib/gconfig.h ..//config.h ..//gtktypes.h ..//gtkaccelerator.h \
+  ..//gtkalignment.h ..//gtkbox.h ..//gtkbutton.h ..//gtkcallback.h \
+  ..//gtkcontainer.h ..//gtkdata.h ..//gtkdraw.h ..//gtkdrawingarea.h \
+  ..//gtkentry.h ..//gtkfilesel.h ..//gtkframe.h ..//gtkgc.h ..//gtklist.h \
+  ..//gtklistbox.h ..//gtkmain.h ..//gtkmenu.h ..//gtkmisc.h ..//gtkobserver.h \
+  ..//gtkoptionmenu.h ..//gtkruler.h ..//gtkscale.h ..//gtkscroll.h \
+  ..//gtkscrollbar.h ..//gtkstyle.h ..//gtktable.h ..//gtkwidget.h \
+  ..//gtkwindow.h

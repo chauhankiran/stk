@@ -1,0 +1,32 @@
+# Generated automatically from Makefile.shared.in by configure.
+GDK_SHARE_OBJS		=	$(GDKSRCS:.c=.so)
+GTK_SHARE_OBJS		=	$(GTKSRCS:.c=.so)
+
+SHARED_CODE_DEF		=	
+SHARED_LIBRARY_DEF	=	
+SHARED_LIBRARY_LDFLAGS	=	-shared
+PIC_CFLAGS		=	-fPIC
+EXTRA_LDFLAGS		=	
+SO			=	so
+
+
+.PHONY: shared sharedclean
+
+# .c.so:
+# 	$(CC) $(PIC_CFLAGS) $(CFLAGS) -o $@ -c $<
+
+%.so: %.c
+	$(CC) $(PIC_CFLAGS) $(CFLAGS) -o $@ -c $<
+
+shared:
+	(cd ./; $(MAKE) $(LIBGDK).$(SO).$(VERSION))
+	(cd ./; $(MAKE) $(LIBGTK).$(SO).$(VERSION))
+
+$(LIBGDK).$(SO).$(VERSION): $(GDK_SHARE_OBJS)
+	$(LD) -o $@ $(SHARED_LIBRARY_LDFLAGS) $(GDK_SHARE_OBJS)
+
+$(LIBGTK).$(SO).$(VERSION): $(GTK_SHARE_OBJS)
+	$(LD) -o $@ $(SHARED_LIBRARY_LDFLAGS) $(GTK_SHARE_OBJS)
+
+sharedclean:
+	rm -f *.so $(LIBGDK).$(SO).$(VERSION) $(LIBGTK).$(SO).$(VERSION)

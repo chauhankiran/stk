@@ -1,0 +1,57 @@
+.SUFFIXES:
+.SUFFIXES: .c .o
+
+srcdir		=	.
+
+SHELL		=	/bin/sh
+
+TESTSRC		=	$(srcdir)/button.c		\
+			$(srcdir)/entry.c		\
+			$(srcdir)/filesel.c		\
+			$(srcdir)/frame.c		\
+			$(srcdir)/gamma_correct.c	\
+			$(srcdir)/listbox.c		\
+			$(srcdir)/optionmenu.c		\
+			$(srcdir)/popup.c		\
+			$(srcdir)/ruler.c		\
+			$(srcdir)/scale.c		\
+			$(srcdir)/scroll.c		\
+			$(srcdir)/scrollbar.c		\
+			$(srcdir)/table.c		\
+			$(srcdir)/toggle.c
+TESTS		=	$(TESTSRC:.c=)
+
+OTHER_FILES	=	Makefile.in .depend
+@_GMAKE_@ALL_FILES	:=	$(foreach file, $(OTHER_FILES) $(wildcard *.[ch]), $(srcdir)/$(file))
+
+CC		=	@CC@
+RANLIB		=	@RANLIB@
+DEPEND		=	$(CC) -MM
+
+LIBS		=	-lgtk -lgdk @LIBS@ -lglib -lc -lm
+CFLAGS		=	@SYSCFLAGS@ -I../ -I../glib @X_CFLAGS@
+LDFLAGS		=	-L../ -L../glib @X_LIBS@ @X_LDFLAGS@
+
+all: $(TESTS)
+
+@_MAKE_@.c: ../libgdk.a ../libgtk.a
+@_MAKE_@	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS) $(LIBS)
+
+@_GMAKE_@%: %.c ../libgdk.a ../libgtk.a
+@_GMAKE_@	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS) $(LIBS)
+
+clean:
+	rm -f *~ *.o $(TESTS)
+
+distclean: clean
+
+files:
+	@echo $(ALL_FILES)
+
+depend:
+	$(DEPEND) $(CFLAGS) $(TESTSRC) > .depend
+
+.depend:
+	touch .depend
+
+include .depend

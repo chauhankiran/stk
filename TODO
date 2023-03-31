@@ -1,0 +1,38 @@
+Items with a star ("*") next to them are considered important.
+Items are numbered by when I thought of their need.
+
+----------------------------------------------------------------------------
+
+
+ 5. Option menus
+    - It is possible for the popup menu to be placed off screen. The
+      option menu should notice this and adjust the menu position so that it
+      is on screen.
+    - Make it possible to specify the visible menu item.
+
+ 10. File selection dialog
+
+*13. Remember to make sure widgets are properly destroying any special
+     data. (Such as labels destroying strings, etc.)
+
+*14. Insert checks to make sure widget type is correct in ALL widget
+     functions.
+
+*15. Insert checks to make sure a widget has a parent when it is
+     realized.
+
+*17. Keyboard traversal of windows. Tab groups, etc.
+
+ 18. Drawing area resize events.
+
+ 19. Redisplay of widgets when they change.
+
+ 21. Extended selection mode for list.
+
+ 22. Implement widget sensitivity.
+
+ 23. Frame label vertical alignment.
+
+
+Bugs
+----

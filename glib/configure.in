@@ -1,0 +1,101 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(glib.h)
+
+dnl Specify a configuration file
+AC_CONFIG_HEADER(gconfig.h)
+
+dnl Check to see if we are using GNU make
+AC_MSG_CHECKING(for gmake)
+AC_CACHE_VAL(gtk_cv_make,
+[_GMAKE_=""
+_MAKE_=""
+
+gtk_cv_make=""
+for trial in gmake gnumake make; do
+  temp=`$trial -v 2>/dev/null | grep GNU`
+    if test "x$temp" != "x"; then
+      gtk_cv_make="$trial"
+      break
+    fi
+done])
+
+if test "x$gtk_cv_make" = "x"; then
+  _GMAKE_="# "
+  AC_MSG_RESULT(no)
+else
+  _MAKE_="# "
+  AC_MSG_RESULT($gtk_cv_make)
+fi
+
+MAKE="$gtk_cv_make"
+AC_SUBST(_GMAKE_)
+AC_SUBST(_MAKE_)
+
+dnl Make sure the `CFLAGS' variable is empty. This environment
+dnl variable affects some of the tests because it affects the
+dnl options during compiling. On some machines it can have a
+dnl negative affect.
+CFLAGS=""
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_RANLIB
+
+dnl Checks for header files.
+AC_HEADER_STDC
+
+dnl Checks for library functions.
+AC_FUNC_VPRINTF
+
+AC_CHECK_SIZEOF(char)
+AC_CHECK_SIZEOF(short)
+AC_CHECK_SIZEOF(long)
+AC_CHECK_SIZEOF(int)
+AC_CHECK_SIZEOF(void *)
+
+AC_C_LONG_DOUBLE
+AC_C_CONST
+AC_C_INLINE
+
+AC_CHECK_HEADERS(float.h, AC_DEFINE(HAVE_FLOAT_H))
+AC_CHECK_HEADERS(limits.h, AC_DEFINE(HAVE_LIMITS_H))
+AC_CHECK_HEADERS(values.h, AC_DEFINE(HAVE_VALUES_H))
+
+dnl Check for c compiler flags
+AC_MSG_CHECKING(for compiler flags)
+AC_CACHE_VAL(gtk_cv_syscflags,
+[gtk_cv_syscflags=""
+if eval "test x$GCC = xyes"; then
+  gtk_cv_syscflags="-g -pipe -Wall -ansi -pedantic"
+else
+  rm -fr conftestdir
+  if mkdir conftestdir; then
+    cd conftestdir
+
+    cat > Imakefile <<'EOF'
+gtk_cv_syscflags:
+	@echo gtk_cv_syscflags=\"${CFLAGS}\"
+EOF
+
+    if (xmkmf) >/dev/null 2>/dev/null && test -f Makefile; then
+      eval `${MAKE-make} gtk_cv_syscflags 2>/dev/null | grep -v make`
+    fi
+
+    cd ..
+    rm -fr conftestdir
+  fi
+fi])
+
+dnl Remove optimization flags for now and replace with the debugging flag
+SYSCFLAGS="-g"
+for option in $gtk_cv_syscflags; do
+  case $option in
+    -g|-O|-O1|-O2|-O3|-O4|-O5|-O6) ;;
+    *) SYSCFLAGS="$SYSCFLAGS $option" ;;
+  esac
+done
+
+AC_MSG_RESULT($SYSCFLAGS)
+AC_SUBST(SYSCFLAGS)
+
+AC_OUTPUT(Makefile)
