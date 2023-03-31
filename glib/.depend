@@ -1,4 +1,0 @@
-glist.o: ./glist.c ./glib.h ./gconfig.h
-gmem.o: ./gmem.c ./glib.h ./gconfig.h
-gtimer.o: ./gtimer.c ./glib.h ./gconfig.h
-gutils.o: ./gutils.c ./glib.h ./gconfig.h

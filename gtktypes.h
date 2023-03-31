@@ -27,7 +27,6 @@
 
 #include "glib.h"
 #include "gdktypes.h"
-#include "config.h"
 
 
 /* Define a macro to clamp a value within an interval.

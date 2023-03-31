@@ -66,6 +66,7 @@
 #define DOUBLE_CLICK_TIME      250
 #define TRIPLE_CLICK_TIME      500
 
+#define RETSIGTYPE void
 
 typedef struct _GdkInput GdkInput;
 struct _GdkInput
@@ -331,9 +332,10 @@ gdk_init (int    *argc,
    *  to find the base resource id. This is only needed for recording
    *  and playback of events.
    */
-  base_id = RESOURCE_BASE;
-  if (gdk_show_events)
-    g_message ("base id: %ul", base_id);
+  // Commented out following code as it throws error.
+  // base_id = RESOURCE_BASE;
+  // if (gdk_show_events)
+  //   g_message ("base id: %ul", base_id);
 
   connection_number = ConnectionNumber (gdk_display);
   if (gdk_debug_level >= 1)

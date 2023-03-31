@@ -27,7 +27,6 @@
  *  access the config information if needed.
  */
 #include "glib.h"
-#include "config.h"
 
 
 /* Type definitions for the basic structures.

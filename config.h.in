@@ -1,9 +1,0 @@
-#undef HAVE_IPC_H
-#undef HAVE_SHM_H
-#undef HAVE_XSHM_H
-
-#undef HAVE_SELECT
-
-#define RETSIGTYPE int
-
-#define RESOURCE_BASE 

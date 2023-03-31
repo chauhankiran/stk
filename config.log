@@ -1,8 +1,0 @@
-This file contains any messages produced by compilers while
-running configure, to aid debugging if configure makes a mistake.
-
-gcc -o conftest -I/usr/X11R6/include -L/usr/X11R6/lib conftest.c
-configure: In function `main':
-configure:1538: structure has no member named `resource_base'
-gcc -c -I/usr/X11R6/include conftest.c
-gcc -o conftest -I/usr/X11R6/include -L/usr/X11R6/lib conftest.c
