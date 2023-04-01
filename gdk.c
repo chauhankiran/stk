@@ -37,11 +37,9 @@
 #include "gdk.h"
 #include "gdkprivate.h"
 
-
 #ifndef X_GETTIMEOFDAY
 #define X_GETTIMEOFDAY(tv)  gettimeofday (tv, NULL)
 #endif /* X_GETTIMEOFDAY */
-
 
 #define TOKEN_LEFT_PAREN       1
 #define TOKEN_RIGHT_PAREN      2
@@ -69,15 +67,13 @@
 #define RETSIGTYPE void
 
 typedef struct _GdkInput GdkInput;
-struct _GdkInput
-{
+struct _GdkInput {
   gint tag;
   gint source;
   GdkInputCondition condition;
   GdkInputFunction function;
   gpointer data;
 };
-
 
 /* Private function declarations
  */
@@ -116,12 +112,12 @@ static int  gdk_x_error (Display *display, XErrorEvent *error);
 static int  gdk_x_io_error (Display *display);
 static RETSIGTYPE gdk_signal (int signum);
 
-
 /* Private variable declarations
  */
 static int initialized = 0;                         /* 1 if the library is initialized,
 						     * 0 otherwise.
 						     */
+
 static int connection_number = 0;                   /* The file descriptor number of our
 						     *  connection to the X server. This
 						     *  is used so that we may determine
@@ -134,6 +130,7 @@ static gint received_destroy_notify = FALSE;        /* Did we just receive a des
 						     *  destroy the window which received
 						     *  it now.
 						     */
+
 static GdkWindow *window_to_destroy = NULL;         /* If we previously received a destroy
 						     *  notify event then this is the window
 						     *  which received that event.
@@ -142,20 +139,24 @@ static GdkWindow *window_to_destroy = NULL;         /* If we previously received
 static struct timeval start;                        /* The time at which the library was
 						     *  last initialized.
 						     */
+
 static struct timeval timer;                        /* Timeout interval to use in the call
 						     *  to "select". This is used in
 						     *  conjunction with "timerp" to create
 						     *  a maximum time to wait for an event
 						     *  to arrive.
 						     */
+
 static struct timeval *timerp;                      /* The actual timer passed to "select"
 						     *  This may be NULL, in which case
 						     *  "select" will block until an event
 						     *  arrives.
 						     */
+
 static guint32 timer_val;                           /* The timeout length as specified by
 						     *  the user in milliseconds.
 						     */
+
 static GList *inputs;                               /* A list of the input file descriptors
 						     *  that we care about. Each list node
 						     *  contains a GdkInput struct that describes
@@ -164,14 +165,17 @@ static GList *inputs;                               /* A list of the input file 
 						     *  available for read, write or has an
 						     *  exception pending.
 						     */
+
 static guint32 button_click_time[2];                /* The last 2 button click times. Used
 						     *  to determine if the latest button click
 						     *  is part of a double or triple click.
 						     */
+
 static GdkWindow *button_window[2];                 /* The last 2 windows to receive button presses.
 						     *  Also used to determine if the latest button
 						     *  click is part of a double or triple click.
 						     */
+
 static gint button_number[2];                       /* The last 2 buttons to be pressed.
 						     */
 
@@ -195,7 +199,6 @@ static gint next_token;
 
 static gint autorepeat;
 
-
 /*
  *--------------------------------------------------------------
  * gdk_init
@@ -218,9 +221,7 @@ static gint autorepeat;
  */
 
 void
-gdk_init (int    *argc,
-	  char ***argv)
-{
+gdk_init (int *argc, char ***argv) {
   XKeyboardState keyboard_state;
   int synchronize;
   int i, j, k;
@@ -245,88 +246,79 @@ gdk_init (int    *argc,
 
   synchronize = FALSE;
 
-  for (i = 1; i < *argc;)
-    {
-      if (strcmp ("-display", (*argv)[i]) == 0)
-	{
-	  (*argv)[i] = NULL;
+  for (i = 1; i < *argc;) {
+      if (strcmp ("-display", (*argv)[i]) == 0) {
+        (*argv)[i] = NULL;
 
-	  if ((i + 1) < *argc)
-	    {
-	      gdk_display_name = g_strdup ((*argv)[i + 1]);
-	      (*argv)[i + 1] = NULL;
-	      i += 1;
-	    }
-	}
-      else if (strcmp ("-record", (*argv)[i]) == 0)
-	{
-	  (*argv)[i] = NULL;
+        if ((i + 1) < *argc) {
+  	      gdk_display_name = g_strdup ((*argv)[i + 1]);
+  	      (*argv)[i + 1] = NULL;
+  	      i += 1;
+        }
+      } else if (strcmp ("-record", (*argv)[i]) == 0) {
+        (*argv)[i] = NULL;
 
-	  if ((i + 1) < *argc)
-	    {
-	      if (record_filename)
-		g_free (record_filename);
-	      if (record_fp)
-		fclose (record_fp);
+        if ((i + 1) < *argc) {
+          if (record_filename) {
+		        g_free (record_filename);
+          }
+	      if (record_fp) {
+		      fclose (record_fp);
+        }
 	      record_filename = g_strdup ((*argv)[i + 1]);
 	      record_fp = fopen (record_filename, "w");
-	      if (!record_fp)
-		g_error ("unable to open file \"%s\" for writing", record_filename);
+	      if (!record_fp) {
+		      g_error ("unable to open file \"%s\" for writing", record_filename);
+        }
 	      (*argv)[i + 1] = NULL;
 	      i += 1;
 	    }
-	}
-      else if (strcmp ("-playback", (*argv)[i]) == 0)
-	{
-	  (*argv)[i] = NULL;
+    } else if (strcmp ("-playback", (*argv)[i]) == 0) {
+      (*argv)[i] = NULL;
 
-	  if ((i + 1) < *argc)
-	    {
-	      if (playback_filename)
-		g_free (playback_filename);
-	      if (playback_fp)
-		fclose (playback_fp);
+      if ((i + 1) < *argc) {
+	      if (playback_filename) {
+		      g_free (playback_filename);
+        }
+	      if (playback_fp) {
+		      fclose (playback_fp);
+        }
 	      playback_filename = g_strdup ((*argv)[i + 1]);
 	      playback_fp = fopen (playback_filename, "r");
-	      if (!playback_fp)
-		g_error ("unable to open file \"%s\" for reading", playback_filename);
+	      if (!playback_fp) {
+		      g_error ("unable to open file \"%s\" for reading", playback_filename);
+        }
 	      do_playback = TRUE;
 	      (*argv)[i + 1] = NULL;
 	      i += 1;
 	    }
-	}
-      else if (strcmp ("-motion-events", (*argv)[i]) == 0)
-	{
-	  (*argv)[i] = NULL;
-	  gdk_motion_events = TRUE;
-	}
-      else if (strcmp ("-sync", (*argv)[i]) == 0)
-	{
-	  (*argv)[i] = NULL;
-	  synchronize = TRUE;
-	}
-
-      i += 1;
+    } else if (strcmp ("-motion-events", (*argv)[i]) == 0) {
+  	  (*argv)[i] = NULL;
+  	  gdk_motion_events = TRUE;
+  	} else if (strcmp ("-sync", (*argv)[i]) == 0) {
+      (*argv)[i] = NULL;
+      synchronize = TRUE;
     }
+    i += 1;
+  }
 
-  for (i = 1; i < *argc; i++)
-    {
-      for (k = i; k < *argc; k++)
-	if ((*argv)[k] != NULL)
-	  break;
+  for (i = 1; i < *argc; i++) {
+    for (k = i; k < *argc; k++)
+      if ((*argv)[k] != NULL)
+    break;
 
-      if (k > i)
-	{
-	  k -= i;
-	  for (j = i + k; j < *argc; j++)
-	    (*argv)[j-k] = (*argv)[j];
-	  *argc -= k;
-	}
-    }
+    if (k > i) {
+      k -= i;
+  	  for (j = i + k; j < *argc; j++)
+        (*argv)[j-k] = (*argv)[j];
+      *argc -= k;
+  	}
+  }
 
   gdk_display = XOpenDisplay (gdk_display_name);
-  if (!gdk_display)
+  if (!gdk_display) {
     g_error ("cannot open display: %s", XDisplayName (gdk_display_name));
+  }
 
   /* This is really crappy. We have to look into the display structure
    *  to find the base resource id. This is only needed for recording
@@ -338,11 +330,13 @@ gdk_init (int    *argc,
   //   g_message ("base id: %ul", base_id);
 
   connection_number = ConnectionNumber (gdk_display);
-  if (gdk_debug_level >= 1)
+  if (gdk_debug_level >= 1) {
     g_message ("connection number: %d", connection_number);
+  }
 
-  if (synchronize)
+  if (synchronize) {
     XSynchronize (gdk_display, True);
+  }
 
   gdk_screen = DefaultScreen (gdk_display);
   gdk_root_window = RootWindow (gdk_display, gdk_screen);
@@ -365,8 +359,9 @@ gdk_init (int    *argc,
   button_number[0] = -1;
   button_number[1] = -1;
 
-  if (ATEXIT (gdk_exit_func))
+  if (ATEXIT (gdk_exit_func)) {
     g_warning ("unable to register exit function");
+  }
 
   gdk_visual_init ();
   gdk_window_init ();
@@ -395,28 +390,28 @@ gdk_init (int    *argc,
  *--------------------------------------------------------------
  */
 
-void
-gdk_exit (int errorcode)
-{
+void gdk_exit (int errorcode) {
   g_function_enter ("gdk_exit");
 
-  if (initialized)
-    {
-      gdk_image_exit ();
+  if (initialized) {
+    gdk_image_exit ();
 
-      if (autorepeat)
-	XAutoRepeatOn (gdk_display);
-      else
-	XAutoRepeatOff (gdk_display);
-
-      XCloseDisplay (gdk_display);
-      initialized = 0;
-
-      if (record_fp)
-	fclose (record_fp);
-      if (playback_fp)
-	fclose (playback_fp);
+    if (autorepeat) {
+      XAutoRepeatOn (gdk_display);
+    } else {
+      XAutoRepeatOff (gdk_display);
     }
+
+    XCloseDisplay (gdk_display);
+    initialized = 0;
+
+    if (record_fp) {
+      fclose (record_fp);
+    }
+    if (playback_fp) {
+      fclose (playback_fp);
+    }
+  }
 
   exit (errorcode);
   g_function_leave ("gdk_exit");
@@ -440,9 +435,7 @@ gdk_exit (int errorcode)
  *--------------------------------------------------------------
  */
 
-gint
-gdk_events_pending ()
-{
+gint gdk_events_pending() {
   return XPending (gdk_display);
 }
 
@@ -469,9 +462,7 @@ gdk_events_pending ()
  *--------------------------------------------------------------
  */
 
-gint
-gdk_event_get (GdkEvent *event)
-{
+gint gdk_event_get (GdkEvent *event) {
   GdkWindow *window;
   GdkEvent *temp_event;
   GList *temp_list;
@@ -490,133 +481,114 @@ gdk_event_get (GdkEvent *event)
    *  may try to access them and may need to destroy user
    *  data that has been attached to the window
    */
-  if (received_destroy_notify)
-    {
-      if (gdk_show_events)
-	g_message ("destroying window:\twindow: %d",
-		     ((GdkWindowPrivate*) window_to_destroy)->xwindow - base_id);
-
-      gdk_window_real_destroy (window_to_destroy);
-      received_destroy_notify = FALSE;
-      window_to_destroy = NULL;
+  if (received_destroy_notify) {
+    if (gdk_show_events) {
+      g_message ("destroying window:\twindow: %d", ((GdkWindowPrivate*) window_to_destroy)->xwindow - base_id);
     }
+
+    gdk_window_real_destroy (window_to_destroy);
+    received_destroy_notify = FALSE;
+    window_to_destroy = NULL;
+  }
 
   /* Initially we haven't received an event and want to
    *  return FALSE. If "event" is non-NULL, then initialize
    *  it to the nothing event.
    */
   return_val = FALSE;
-  if (event)
-    {
-      event->any.type = GDK_NOTHING;
-      event->any.window = NULL;
-      event->any.send_event = FALSE;
+  if (event) {
+    event->any.type = GDK_NOTHING;
+    event->any.window = NULL;
+    event->any.send_event = FALSE;
+  }
+
+  if (putback_events) {
+    temp_event = putback_events->data;
+    *event = *temp_event;
+
+    temp_list = putback_events;
+    putback_events = putback_events->next;
+    if (putback_events) {
+      putback_events->prev = NULL;
     }
 
-  if (putback_events)
-    {
-      temp_event = putback_events->data;
-      *event = *temp_event;
+    temp_list->next = NULL;
+    temp_list->prev = NULL;
+    g_list_free (temp_list);
+    g_free (temp_event);
 
-      temp_list = putback_events;
-      putback_events = putback_events->next;
-      if (putback_events)
-	putback_events->prev = NULL;
+    return_val = TRUE;
+  } else if (gdk_event_wait ()) {
+    /* Wait for an event to occur or the timeout to elapse.
+     * If an event occurs "gdk_event_wait" will return TRUE.
+     *  If the timeout elapses "gdk_event_wait" will return
+     *  FALSE.
+     */
+    
+    /* If we get here we can rest assurred that an event
+     *  has occurred. Read it.
+     */
+    gdk_event_playback (gdk_display, &xevent);
 
-      temp_list->next = NULL;
-      temp_list->prev = NULL;
-      g_list_free (temp_list);
-      g_free (temp_event);
+    /* Find the GdkWindow that this event occurred in.
+     * All events occur in some GdkWindow (otherwise, why
+     *  would we be receiving them). It really is an error
+     *  to receive an event for which we cannot find the
+     *  corresponding GdkWindow.
+     */
+    window = gdk_window_table_lookup (xevent.xany.window);
+    event->any.send_event = xevent.xany.send_event;
 
-      return_val = TRUE;
-    }
-  else if (gdk_event_wait ())
-  /* Wait for an event to occur or the timeout to elapse.
-   * If an event occurs "gdk_event_wait" will return TRUE.
-   *  If the timeout elapses "gdk_event_wait" will return
-   *  FALSE.
-   */
-    {
-      /* If we get here we can rest assurred that an event
-       *  has occurred. Read it.
-       */
-      gdk_event_playback (gdk_display, &xevent);
+    /* If "event" non-NULL.
+     */
+    if (event) {
+  	  /* We do a "manual" conversion of the XEvent to a
+  	   *  GdkEvent. The structures are mostly the same so
+  	   *  the conversion is fairly straightforward. We also
+  	   *  optionally print debugging info regarding events
+  	   *  received.
+  	   */
+      switch (xevent.type) {
+  	    case KeyPress:
+  	      /* Lookup the string corresponding to the given keysym.
+  	       */
+  	      charcount = XLookupString (&xevent.xkey, buf, 16,
+  					(KeySym*) &event->key.keyval,
+  					&compose);
 
-      /* Find the GdkWindow that this event occurred in.
-       * All events occur in some GdkWindow (otherwise, why
-       *  would we be receiving them). It really is an error
-       *  to receive an event for which we cannot find the
-       *  corresponding GdkWindow.
-       */
-      window = gdk_window_table_lookup (xevent.xany.window);
-      event->any.send_event = xevent.xany.send_event;
+  	      /* Print debugging info. */
+	        if (gdk_show_events) {
+		        g_message ("key press:\t\twindow: %d  key: %12s  %d", xevent.xkey.window - base_id, XKeysymToString (event->key.keyval), event->key.keyval);
+          }
 
-      /* If "event" non-NULL.
-       */
-      if (event)
-	{
-	  /* We do a "manual" conversion of the XEvent to a
-	   *  GdkEvent. The structures are mostly the same so
-	   *  the conversion is fairly straightforward. We also
-	   *  optionally print debugging info regarding events
-	   *  received.
-	   */
-	  switch (xevent.type)
-	    {
-	    case KeyPress:
-	      /* Lookup the string corresponding to the given keysym.
-	       */
-	      charcount = XLookupString (&xevent.xkey, buf, 16,
-					 (KeySym*) &event->key.keyval,
-					 &compose);
+  	      event->key.type = GDK_KEY_PRESS;
+  	      event->key.window = window;
+  	      event->key.time = xevent.xkey.time;
+  	      event->key.state = (GdkModifierType) xevent.xkey.state;
 
-	      /* Print debugging info.
-	       */
-	      if (gdk_show_events)
-		g_message ("key press:\t\twindow: %d  key: %12s  %d",
-			   xevent.xkey.window - base_id,
-			   XKeysymToString (event->key.keyval),
-			   event->key.keyval);
+  	      return_val = !((GdkWindowPrivate*) window)->destroyed;
+	        break;
+	      case KeyRelease:
+	        /* Lookup the string corresponding to the given keysym. */
+	        charcount = XLookupString (&xevent.xkey, buf, 16, (KeySym*) &event->key.keyval, &compose);
 
-	      event->key.type = GDK_KEY_PRESS;
-	      event->key.window = window;
-	      event->key.time = xevent.xkey.time;
-	      event->key.state = (GdkModifierType) xevent.xkey.state;
+          /* Print debugging info. */
+	        if (gdk_show_events) {
+		        g_message ("key release:\t\twindow: %d  key: %12s  %d", xevent.xkey.window - base_id, XKeysymToString (event->key.keyval), event->key.keyval);
+          }
 
-	      return_val = !((GdkWindowPrivate*) window)->destroyed;
-	      break;
+  	      event->key.type = GDK_KEY_RELEASE;
+  	      event->key.window = window;
+  	      event->key.time = xevent.xkey.time;
+  	      event->key.state = (GdkModifierType) xevent.xkey.state;
 
-	    case KeyRelease:
-	      /* Lookup the string corresponding to the given keysym.
-	       */
-	      charcount = XLookupString (&xevent.xkey, buf, 16,
-					 (KeySym*) &event->key.keyval,
-					 &compose);
-
-	      /* Print debugging info.
-	       */
-	      if (gdk_show_events)
-		g_message ("key release:\t\twindow: %d  key: %12s  %d",
-			   xevent.xkey.window - base_id,
-			   XKeysymToString (event->key.keyval),
-			   event->key.keyval);
-
-	      event->key.type = GDK_KEY_RELEASE;
-	      event->key.window = window;
-	      event->key.time = xevent.xkey.time;
-	      event->key.state = (GdkModifierType) xevent.xkey.state;
-
-	      return_val = !((GdkWindowPrivate*) window)->destroyed;
-	      break;
-
+  	      return_val = !((GdkWindowPrivate*) window)->destroyed;
+	        break;
 	    case ButtonPress:
-	      /* Print debugging info.
-	       */
-	      if (gdk_show_events)
-		g_message ("button press:\t\twindow: %d  x,y: %d %d  button: %d",
-			     xevent.xbutton.window - base_id,
-			     xevent.xbutton.x, xevent.xbutton.y,
-			     xevent.xbutton.button);
+	      /* Print debugging info. */
+	      if (gdk_show_events) {
+		      g_message ("button press:\t\twindow: %d  x,y: %d %d  button: %d", xevent.xbutton.window - base_id, xevent.xbutton.x, xevent.xbutton.y, xevent.xbutton.button);
+        }
 
 	      event->button.type = GDK_BUTTON_PRESS;
 	      event->button.window = window;
@@ -626,53 +598,41 @@ gdk_event_get (GdkEvent *event)
 	      event->button.state = (GdkModifierType) xevent.xbutton.state;
 	      event->button.button = xevent.xbutton.button;
 
-	      if ((event->button.time < (button_click_time[1] + TRIPLE_CLICK_TIME)) &&
-		  (event->button.window == button_window[1]) &&
-		  (event->button.button == button_number[1]))
-		{
-		  gdk_synthesize_click (event, 3);
+	      if ((event->button.time < (button_click_time[1] + TRIPLE_CLICK_TIME)) && (event->button.window == button_window[1]) && (event->button.button == button_number[1])) {
+		    gdk_synthesize_click (event, 3);
 
-		  button_click_time[1] = 0;
-		  button_click_time[0] = 0;
-		  button_window[1] = NULL;
-		  button_window[0] = 0;
-		  button_number[1] = -1;
-		  button_number[0] = -1;
-		}
-	      else if ((event->button.time < (button_click_time[0] + DOUBLE_CLICK_TIME)) &&
-		       (event->button.window == button_window[0]) &&
-		       (event->button.button == button_number[0]))
-		{
-		  gdk_synthesize_click (event, 2);
+    		  button_click_time[1] = 0;
+    		  button_click_time[0] = 0;
+    		  button_window[1] = NULL;
+    		  button_window[0] = 0;
+    		  button_number[1] = -1;
+    		  button_number[0] = -1;
+    		} else if ((event->button.time < (button_click_time[0] + DOUBLE_CLICK_TIME)) && (event->button.window == button_window[0]) && (event->button.button == button_number[0])) {
+		      gdk_synthesize_click (event, 2);
 
-		  button_click_time[1] = button_click_time[0];
-		  button_click_time[0] = event->button.time;
-		  button_window[1] = button_window[0];
-		  button_window[0] = event->button.window;
-		  button_number[1] = button_number[0];
-		  button_number[0] = event->button.button;
-		}
-	      else
-		{
-		  button_click_time[1] = 0;
-		  button_click_time[0] = event->button.time;
-		  button_window[1] = NULL;
-		  button_window[0] = event->button.window;
-		  button_number[1] = -1;
-		  button_number[0] = event->button.button;
-		}
+    		  button_click_time[1] = button_click_time[0];
+    		  button_click_time[0] = event->button.time;
+    		  button_window[1] = button_window[0];
+    		  button_window[0] = event->button.window;
+    		  button_number[1] = button_number[0];
+    		  button_number[0] = event->button.button;
+		    } else {
+    		  button_click_time[1] = 0;
+    		  button_click_time[0] = event->button.time;
+    		  button_window[1] = NULL;
+    		  button_window[0] = event->button.window;
+    		  button_number[1] = -1;
+    		  button_number[0] = event->button.button;
+    		}
 
 	      return_val = !((GdkWindowPrivate*) window)->destroyed;
 	      break;
 
 	    case ButtonRelease:
-	      /* Print debugging info.
-	       */
-	      if (gdk_show_events)
-		g_message ("button release:\twindow: %d  x,y: %d %d  button: %d",
-			     xevent.xbutton.window - base_id,
-			     xevent.xbutton.x, xevent.xbutton.y,
-			     xevent.xbutton.button);
+	      /* Print debugging info. */
+	      if (gdk_show_events) {
+		      g_message ("button release:\twindow: %d  x,y: %d %d  button: %d", xevent.xbutton.window - base_id, xevent.xbutton.x, xevent.xbutton.y, xevent.xbutton.button);
+        }
 
 	      event->button.type = GDK_BUTTON_RELEASE;
 	      event->button.window = window;
@@ -684,15 +644,11 @@ gdk_event_get (GdkEvent *event)
 
 	      return_val = !((GdkWindowPrivate*) window)->destroyed;
 	      break;
-
 	    case MotionNotify:
-	      /* Print debugging info.
-	       */
-	      if (gdk_show_events)
-		g_message ("motion notify:\t\twindow: %d  x,y: %d %d  hint: %s",
-			     xevent.xmotion.window - base_id,
-			     xevent.xmotion.x, xevent.xmotion.y,
-			     (xevent.xmotion.is_hint) ? "true" : "false");
+	      /* Print debugging info. */
+	      if (gdk_show_events) {
+		      g_message ("motion notify:\t\twindow: %d  x,y: %d %d  hint: %s", xevent.xmotion.window - base_id, xevent.xmotion.x, xevent.xmotion.y, (xevent.xmotion.is_hint) ? "true" : "false");
+        }
 
 	      event->motion.type = GDK_MOTION_NOTIFY;
 	      event->motion.window = window;
@@ -704,10 +660,8 @@ gdk_event_get (GdkEvent *event)
 
 	      return_val = !((GdkWindowPrivate*) window)->destroyed;
 	      break;
-
 	    case EnterNotify:
-	      /* Print debugging info.
-	       */
+	      /* Print debugging info. */
 	      if (gdk_show_events)
 		g_message ("enter notify:\t\twindow: %d  detail: %d",
 			     xevent.xcrossing.window - base_id,
@@ -1090,9 +1044,7 @@ gdk_event_get (GdkEvent *event)
   return return_val;
 }
 
-void
-gdk_event_put (GdkEvent *event)
-{
+void gdk_event_put (GdkEvent *event) {
   GdkEvent *new_event;
 
   g_function_enter ("gdk_event_put");
@@ -1108,57 +1060,61 @@ gdk_event_put (GdkEvent *event)
 }
 
 
-void
-gdk_events_record (char *filename)
-{
+void gdk_events_record (char *filename) {
   g_function_enter ("gdk_events_record");
 
-  if (record_filename)
+  if (record_filename) {
     g_free (record_filename);
-  if (record_fp)
+  }
+  if (record_fp) {
     fclose (record_fp);
+  }
 
   record_filename = g_strdup (filename);
   record_fp = fopen (record_filename, "w");
-  if (!record_fp)
+  if (!record_fp) {
     g_error ("unable to open file \"%s\" for writing", record_filename);
+  }
 
   g_function_leave ("gdk_events_record");
 }
 
-void
-gdk_events_playback (char *filename)
-{
+void gdk_events_playback (char *filename) {
   g_function_enter ("gdk_events_playback");
 
-  if (playback_filename)
+  if (playback_filename) {
     g_free (playback_filename);
-  if (playback_fp)
+  }
+  if (playback_fp) {
     fclose (playback_fp);
+  }
 
   playback_filename = g_strdup (filename);
   playback_fp = fopen (playback_filename, "r");
-  if (!playback_fp)
+  if (!playback_fp) {
     g_error ("unable to open file \"%s\" for reading", playback_filename);
+  }
   do_playback = TRUE;
 
   g_function_leave ("gdk_events_playback");
 }
 
-void
-gdk_events_stop ()
-{
+void gdk_events_stop () {
   g_function_enter ("gdk_events_stop");
 
-  if (record_filename)
+  if (record_filename) {
     g_free (record_filename);
-  if (record_fp)
+  }
+  if (record_fp) {
     fclose (record_fp);
+  }
 
-  if (playback_filename)
+  if (playback_filename) {
     g_free (playback_filename);
-  if (playback_fp)
+  }
+  if (playback_fp) {
     fclose (playback_fp);
+  }
 
   record_filename = NULL;
   record_fp = NULL;
@@ -1188,9 +1144,7 @@ gdk_events_stop ()
  *--------------------------------------------------------------
  */
 
-void
-gdk_set_debug_level (int level)
-{
+void gdk_set_debug_level (int level) {
   gdk_debug_level = level;
 }
 
@@ -1214,9 +1168,7 @@ gdk_set_debug_level (int level)
  *--------------------------------------------------------------
  */
 
-void
-gdk_set_show_events (int show_events)
-{
+void gdk_set_show_events (int show_events) {
   gdk_show_events = show_events;
 }
 
@@ -1240,9 +1192,7 @@ gdk_set_show_events (int show_events)
  *--------------------------------------------------------------
  */
 
-guint32
-gdk_time_get ()
-{
+guint32 gdk_time_get () {
   struct timeval end;
   struct timeval elapsed;
   guint32 milliseconds;
@@ -1251,11 +1201,10 @@ gdk_time_get ()
 
   X_GETTIMEOFDAY (&end);
 
-  if (start.tv_usec > end.tv_usec)
-    {
-      end.tv_usec += 1000000;
-      end.tv_sec--;
-    }
+  if (start.tv_usec > end.tv_usec) {
+    end.tv_usec += 1000000;
+    end.tv_sec--;
+  }
   elapsed.tv_sec = end.tv_sec - start.tv_sec;
   elapsed.tv_usec = end.tv_usec - start.tv_usec;
 
@@ -1282,9 +1231,7 @@ gdk_time_get ()
  *--------------------------------------------------------------
  */
 
-guint32
-gdk_timer_get ()
-{
+guint32 gdk_timer_get () {
   return timer_val;
 }
 
@@ -1308,32 +1255,22 @@ gdk_timer_get ()
  *--------------------------------------------------------------
  */
 
-void
-gdk_timer_set (guint32 milliseconds)
-{
+void gdk_timer_set (guint32 milliseconds) {
   g_function_enter ("gdk_timer_set");
 
   timer_val = milliseconds;
-  if (milliseconds == 0)
-    {
+  if (milliseconds == 0) {
       timerp = NULL;
-    }
-  else
-    {
-      timerp = &timer;
-      timer.tv_sec = milliseconds / 1000;
-      timer.tv_usec = (milliseconds % 1000) * 1000;
-    }
+  } else {
+    timerp = &timer;
+    timer.tv_sec = milliseconds / 1000;
+    timer.tv_usec = (milliseconds % 1000) * 1000;
+  }
 
   g_function_leave ("gdk_timer_set");
 }
 
-gint
-gdk_input_add (gint              source,
-	       GdkInputCondition condition,
-	       GdkInputFunction  function,
-	       gpointer          data)
-{
+gint gdk_input_add (gint source, GdkInputCondition condition, GdkInputFunction function, gpointer data) {
   static gint next_tag = 1;
   GList *list;
   GdkInput *input;
@@ -1344,39 +1281,34 @@ gdk_input_add (gint              source,
   tag = 0;
   list = inputs;
 
-  while (list)
-    {
-      input = list->data;
-      list = list->next;
+  while (list) {
+    input = list->data;
+    list = list->next;
 
-      if ((input->source == source) && (input->condition == condition))
-	{
-	  input->function = function;
-	  input->data = data;
-	  tag = input->tag;
-	}
-    }
-
-  if (!tag)
-    {
-      input = g_new (GdkInput, 1);
-      input->tag = next_tag++;
-      input->source = source;
-      input->condition = condition;
+    if ((input->source == source) && (input->condition == condition)) {
       input->function = function;
       input->data = data;
       tag = input->tag;
-
-      inputs = g_list_prepend (inputs, input);
     }
+  }
+
+  if (!tag) {
+    input = g_new (GdkInput, 1);
+    input->tag = next_tag++;
+    input->source = source;
+    input->condition = condition;
+    input->function = function;
+    input->data = data;
+    tag = input->tag;
+
+    inputs = g_list_prepend (inputs, input);
+  }
 
   g_function_leave ("gdk_input_add");
   return tag;
 }
 
-void
-gdk_input_remove (gint tag)
-{
+void gdk_input_remove (gint tag) {
   GList *list;
   GList *temp_list;
   GdkInput *input;
@@ -1384,31 +1316,32 @@ gdk_input_remove (gint tag)
   g_function_enter ("gdk_input_remove");
 
   list = inputs;
-  while (list)
-    {
-      input = list->data;
+  while (list) {
+    input = list->data;
 
-      if (input->tag == tag)
-	{
-	  temp_list = list;
+    if (input->tag == tag) {
+      temp_list = list;
 
-	  if (list->next)
-	    list->next->prev = list->prev;
-	  if (list->prev)
-	    list->prev->next = list->next;
-	  if (inputs == list)
-	    inputs = list->next;
+      if (list->next) {
+        list->next->prev = list->prev;
+      }
+      if (list->prev) {
+        list->prev->next = list->next;
+      }
+      if (inputs == list) {
+        inputs = list->next;
+      }
 
-	  temp_list->next = NULL;
-	  temp_list->prev = NULL;
+  	  temp_list->next = NULL;
+  	  temp_list->prev = NULL;
 
-	  g_free (temp_list->data);
-	  g_list_free (temp_list);
-	  break;
-	}
-
-      list = list->next;
+	    g_free (temp_list->data);
+	    g_list_free (temp_list);
+	    break;
     }
+
+    list = list->next;
+  }
 
   g_function_leave ("gdk_input_remove");
 }
